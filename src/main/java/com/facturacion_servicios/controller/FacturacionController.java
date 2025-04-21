@@ -4,37 +4,62 @@ package com.facturacion_servicios.controller;
 
 import com.facturacion_servicios.model.Factura;
 import com.facturacion_servicios.service.FacturacionService;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/facturacion")
+@RequestMapping("/factura")
+@CrossOrigin(origins = "*")
 public class FacturacionController {
-    private final FacturacionService facturacionService;
+    
 
     public FacturacionController(FacturacionService facturacionService) {
         this.facturacionService = facturacionService;
     }
 
-    @GetMapping("/facturas")
-    public List<Factura> obtenerFacturas() {
-        return facturacionService.obtenerFacturas();
+    @Autowired
+    private FacturacionService facturacionService;
+
+    @GetMapping
+    public List<Factura> getAllFacturas () {
+        return facturacionService.getAllFacturas();
     }
 
-    @GetMapping("/facturas/{id}")
-    public Factura obtenerFactura(@PathVariable int id) {
-        return facturacionService.obtenerFactura(id);
+    @GetMapping("/{id}")
+    public Optional<Factura> getFacturaById (@PathVariable long id) {
+        return facturacionService.getFacturaById(id);
     }
 
-    @GetMapping("/facturas/total")
-    public double calcularTotal() {
-        return facturacionService.calcularTotal();
+    @PostMapping
+    public Factura createFactura(@RequestBody Factura factura) {
+        return facturacionService.createFactura(factura);
     }
 
-    @GetMapping("/servicios")
-    public List<String> obtenerServicios() {
-        return facturacionService.obtenerServicios();
+    @PutMapping("/{id}")
+    public Factura updateFactura(@PathVariable Long id, @RequestBody Factura factura) {
+        return facturacionService.updateFactura(id, factura);
     }
+
+    
+    @DeleteMapping("/{id}")
+    public void deleteFactura(@PathVariable Long id){
+        facturacionService.deleteFactura(id);
+    }
+
+    //@GetMapping("/facturas/total")
+   // public double calcularTotal() {
+   //     return facturacionService.calcularTotal();
+   // }
+
+   // @GetMapping("/servicios")
+  //  public List<String> obtenerServicios() {
+  //      return facturacionService.obtenerServicios();
+   // }
+   
 }
+
