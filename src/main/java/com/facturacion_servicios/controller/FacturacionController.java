@@ -51,15 +51,6 @@ public class FacturacionController {
         facturacionService.deleteFactura(id);
     }
 
-    //@GetMapping("/facturas/total")
-   // public double calcularTotal() {
-   //     return facturacionService.calcularTotal();
-   // }
-
-   // @GetMapping("/servicios")
-  //  public List<String> obtenerServicios() {
-  //      return facturacionService.obtenerServicios();
-   // }
    
 }
 
