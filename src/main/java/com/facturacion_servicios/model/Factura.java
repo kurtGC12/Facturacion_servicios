@@ -7,12 +7,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.springframework.hateoas.RepresentationModel;
 
 
 // 
 @Entity
 @Table(name = "factura") // nombre de la tabla
-public class Factura  {
+public class Factura extends RepresentationModel<Factura> {//extencion  de la libreria
 
     @Id // clave primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY) // se genera automaticamente 

@@ -38,77 +38,88 @@ public class FacturacionControllerTest {
     private FacturacionController facturacionController;  // Inyectar el controlador con el servicio 
 
     @Test
-    public void obtenerTodasLasFacturasTest() throws Exception {
-        Factura factura1 = new Factura();
-        factura1.setId(1L);
-        factura1.setServicio("Cirugía");
-        factura1.setDescripcion("Cirugía de emergencia");
-        factura1.setCosto(45000.0);
+public void obtenerTodasLasFacturasTest() throws Exception {
+    Factura factura1 = new Factura();
+    factura1.setId(1L);
+    factura1.setServicio("Cirugía");
+    factura1.setDescripcion("Cirugía de emergencia");
+    factura1.setCosto(45000.0);
 
-        Factura factura2 = new Factura();
-        factura2.setId(2L);
-        factura2.setServicio("Vacunación");
-        factura2.setDescripcion("Vacuna contra la rabia");
-        factura2.setCosto(15000.0);
+    Factura factura2 = new Factura();
+    factura2.setId(2L);
+    factura2.setServicio("Vacunación");
+    factura2.setDescripcion("Vacuna contra la rabia");
+    factura2.setCosto(15000.0);
 
-        when(facturacionServiceMock.getAllFacturas()).thenReturn(List.of(factura1, factura2));
+    when(facturacionServiceMock.getAllFacturas()).thenReturn(List.of(factura1, factura2));
 
-        mockMvc.perform(get("/factura"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].servicio").value("Cirugía"))
-                .andExpect(jsonPath("$[1].servicio").value("Vacunación"));
-    }
+    mockMvc.perform(get("/factura"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$._embedded.facturaList[0].servicio").value("Cirugía"))
+        .andExpect(jsonPath("$._embedded.facturaList[0].descripcion").value("Cirugía de emergencia"))
+        .andExpect(jsonPath("$._embedded.facturaList[0]._links.self.href").exists())
+        .andExpect(jsonPath("$._embedded.facturaList[1].servicio").value("Vacunación"))
+        .andExpect(jsonPath("$._embedded.facturaList[1]._links.self.href").exists())
+        .andExpect(jsonPath("$._links.self.href").exists());
+}
 
-    @Test
-    public void obtenerFacturaPorIdTest() throws Exception {
-        Factura factura = new Factura();
-        factura.setId(1L);
-        factura.setServicio("Cirugía");
-        factura.setDescripcion("Cirugía de emergencia");
-        factura.setCosto(45000.0);
+@Test
+public void obtenerFacturaPorIdTest() throws Exception {
+    Factura factura = new Factura();
+    factura.setId(1L);
+    factura.setServicio("Cirugía");
+    factura.setDescripcion("Cirugía de emergencia");
+    factura.setCosto(45000.0);
 
-        when(facturacionServiceMock.getFacturaById(1L)).thenReturn(Optional.of(factura));
+    when(facturacionServiceMock.getFacturaById(1L)).thenReturn(Optional.of(factura));
 
-        mockMvc.perform(get("/factura/1"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.servicio").value("Cirugía"))
-                .andExpect(jsonPath("$.descripcion").value("Cirugía de emergencia"));
-    }
+    mockMvc.perform(get("/factura/1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.servicio").value("Cirugía"))
+        .andExpect(jsonPath("$.descripcion").value("Cirugía de emergencia"))
+        .andExpect(jsonPath("$._links.self.href").exists())
+        .andExpect(jsonPath("$._links.todas-las-facturas.href").exists());
+} 
 
-    @Test
-    public void crearFacturaTest() throws Exception {
-        Factura factura = new Factura();
-        factura.setServicio("Cuidado dental");
-        factura.setDescripcion("Limpieza y chequeo dental para prevenir problemas");
-        factura.setCosto(40000.0);
+@Test
+public void crearFacturaTest() throws Exception {
+    Factura factura = new Factura();
+    factura.setId(1L);
+    factura.setServicio("Cuidado dental");
+    factura.setDescripcion("Limpieza y chequeo dental para prevenir problemas");
+    factura.setCosto(40000.0);
 
-        when(facturacionServiceMock.createFactura(any(Factura.class))).thenReturn(factura);
+    when(facturacionServiceMock.createFactura(any(Factura.class))).thenReturn(factura);
 
-        mockMvc.perform(post("/factura")
-                .contentType("application/json")
-                .content("{\"servicio\": \"Cuidado dental\", \"descripcion\": \"Limpieza y chequeo dental para prevenir problemas\", \"costo\": 40000.0}"))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.servicio").value("Cuidado dental"))
-                .andExpect(jsonPath("$.descripcion").value("Limpieza y chequeo dental para prevenir problemas"));
-    }
+    mockMvc.perform(post("/factura")
+            .contentType("application/json")
+            .content("{\"servicio\": \"Cuidado dental\", \"descripcion\": \"Limpieza y chequeo dental para prevenir problemas\", \"costo\": 40000.0}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.servicio").value("Cuidado dental"))
+            .andExpect(jsonPath("$.descripcion").value("Limpieza y chequeo dental para prevenir problemas"))
+            .andExpect(jsonPath("$._links.self.href").exists())
+            .andExpect(jsonPath("$._links.todas-las-facturas.href").exists());
+}
 
-    @Test
-    public void actualizarFacturaTest() throws Exception {
-        Factura factura = new Factura();
-        factura.setId(1L);
-        factura.setServicio("Cuidado dental");
-        factura.setDescripcion("Limpieza y chequeo dental para prevenir problemas");
-        factura.setCosto(40000.0);
+@Test
+public void actualizarFacturaTest() throws Exception {
+    Factura factura = new Factura();
+    factura.setId(1L);
+    factura.setServicio("Cuidado dental");
+    factura.setDescripcion("Limpieza y chequeo dental para prevenir problemas");
+    factura.setCosto(40000.0);
 
-        when(facturacionServiceMock.updateFactura(eq(1L), any(Factura.class))).thenReturn(factura);
+    when(facturacionServiceMock.updateFactura(eq(1L), any(Factura.class))).thenReturn(factura);
 
-        mockMvc.perform(put("/factura/1")
-                .contentType("application/json")
-                .content("{\"servicio\": \"Cuidado dental\", \"descripcion\": \"Limpieza y chequeo dental para prevenir problemas\", \"costo\": 40000.0}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.servicio").value("Cuidado dental"))
-                .andExpect(jsonPath("$.descripcion").value("Limpieza y chequeo dental para prevenir problemas"));
-    }
+    mockMvc.perform(put("/factura/1")
+            .contentType("application/json")
+            .content("{\"servicio\": \"Cuidado dental\", \"descripcion\": \"Limpieza y chequeo dental para prevenir problemas\", \"costo\": 40000.0}"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.servicio").value("Cuidado dental"))
+            .andExpect(jsonPath("$.descripcion").value("Limpieza y chequeo dental para prevenir problemas"))
+            .andExpect(jsonPath("$._links.self.href").exists())
+            .andExpect(jsonPath("$._links.todas-las-facturas.href").exists());
+}
 
     @Test
     public void eliminarFacturaTest() throws Exception {
