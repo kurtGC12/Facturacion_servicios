@@ -1,0 +1,13 @@
+version: '1'
+services:
+  microservicio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - spring.datasource.url=jdbc:oracle:thin:@k5y658kbcmfl1d1c_tp?TNS_ADMIN=/Wallet_K5Y658KBCMFL1D1C
+      - spring.datasource.username=USER_FACTURACION
+      - spring.datasource.password=FactuFullStack123
+    restart: always

@@ -6,6 +6,8 @@ import com.facturacion_servicios.model.Factura;
 import com.facturacion_servicios.service.FacturacionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,9 +38,10 @@ public class FacturacionController {
     }
 
     @PostMapping
-    public Factura createFactura(@RequestBody Factura factura) {
-        return facturacionService.createFactura(factura);
-    }
+    public ResponseEntity<Factura> createFactura(@RequestBody Factura factura) {
+    Factura nuevaFactura = facturacionService.createFactura(factura);
+    return ResponseEntity.status(HttpStatus.CREATED).body(nuevaFactura); 
+}
 
     @PutMapping("/{id}")
     public Factura updateFactura(@PathVariable Long id, @RequestBody Factura factura) {
@@ -47,9 +50,10 @@ public class FacturacionController {
 
     
     @DeleteMapping("/{id}")
-    public void deleteFactura(@PathVariable Long id){
-        facturacionService.deleteFactura(id);
-    }
+   public ResponseEntity<Void> deleteFactura(@PathVariable Long id){
+    facturacionService.deleteFactura(id);
+    return ResponseEntity.noContent().build(); 
+}
 
    
 }

@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 // 
 @Entity
 @Table(name = "factura") // nombre de la tabla
-public class Factura {
+public class Factura  {
 
     @Id // clave primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY) // se genera automaticamente 
