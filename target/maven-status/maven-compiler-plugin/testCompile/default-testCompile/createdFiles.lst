@@ -1,0 +1,5 @@
+com\facturacion_servicios\controller\FacturacionControllerTest.class
+com\facturacion_servicios\model\FacturaTest.class
+com\facturacion_servicios\FacturacionServiciosApplicationTests.class
+com\facturacion_servicios\repository\FacturacionRepositoryTest.class
+com\facturacion_servicios\service\FacturacionServiceTest.class
